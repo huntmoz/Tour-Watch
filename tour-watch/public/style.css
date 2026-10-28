@@ -1,0 +1,360 @@
+/* ---------- Lenis smooth scroll (required) ---------- */
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: clip; }
+.lenis.lenis-smooth iframe { pointer-events: none; }
+
+/* ---------- Tokens ---------- */
+:root {
+  color-scheme: light dark;
+  --bg: #f5f5f7;
+  --card: #ffffff;
+  --field: #f2f2f4;
+  --text: #1d1d1f;
+  --mute: #6e6e73;
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.04), 0 14px 36px rgba(0, 0, 0, 0.07);
+  --ease: cubic-bezier(0.28, 0.11, 0.32, 1);
+  --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+          "Helvetica Neue", "Segoe UI", system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #000000;
+    --card: #1c1c1e;
+    --field: #2c2c2e;
+    --text: #f5f5f7;
+    --mute: #a1a1a6;
+    --accent: #2997ff;
+    --accent-hover: #47a6ff;
+    --shadow: none;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 1.0625rem;
+  line-height: 1.47;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection { background: color-mix(in srgb, var(--accent) 30%, transparent); }
+
+/* ---------- Hero ---------- */
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: clamp(72px, 14vw, 140px) 24px 48px;
+}
+
+h1 {
+  margin: 0 0 28px;
+  font-size: clamp(3rem, 11vw, 6.5rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
+}
+
+#enable-notifications {
+  font: 500 1rem var(--font);
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 980px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+#enable-notifications:hover { background: var(--accent-hover); }
+#enable-notifications:active { transform: scale(0.97); }
+
+/* one page-load moment: the hero rises in */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(24px); filter: blur(8px); }
+  to   { opacity: 1; transform: none; filter: none; }
+}
+h1 { animation: rise 1s var(--ease) backwards; }
+#enable-notifications { animation: rise 1s var(--ease) 0.15s backwards; }
+
+/* ---------- Layout ---------- */
+main { max-width: 980px; margin: 0 auto; padding: 0 24px 120px; }
+
+h2 {
+  margin: 0 0 24px;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+
+.hint { margin: -8px 0 24px; color: var(--mute); max-width: 56ch; }
+
+/* ---------- Cards ---------- */
+#search, #alerts {
+  background: var(--card);
+  border-radius: 28px;
+  padding: clamp(24px, 5vw, 44px);
+  box-shadow: var(--shadow);
+}
+
+#shows, #alerts { margin-top: clamp(56px, 10vw, 104px); }
+
+/* ---------- Search form ---------- */
+#search-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+}
+@media (min-width: 720px) {
+  #search-form { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+#search-input, #search-city { grid-column: span 2; }
+
+#search-form input,
+#search-form select,
+#fav-form input,
+#alert-form input {
+  width: 100%;
+  min-height: 52px;
+  font: inherit;
+  color: var(--text);
+  background: var(--field);
+  border: 0;
+  border-radius: 14px;
+  padding: 14px 16px;
+  transition: box-shadow 0.3s var(--ease), background 0.3s var(--ease);
+}
+#shows #fav-form input, #alerts #alert-form input { background: var(--card); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--mute) 30%, transparent); }
+#alerts #alert-form input { background: var(--field); box-shadow: none; }
+
+#search-form input::placeholder,
+#fav-form input::placeholder,
+#alert-form input::placeholder { color: var(--mute); }
+
+#search-form input:focus,
+#search-form select:focus,
+#fav-form input:focus,
+#alert-form input:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 35%, transparent);
+}
+
+#search-form select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none' stroke='%2386868b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M1 1.5l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+#search-form option { color: #1d1d1f; }
+
+.date-field {
+  display: grid;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--mute);
+}
+
+#search-form button[type="submit"],
+#fav-form button,
+#alert-form button {
+  min-height: 52px;
+  padding: 0 28px;
+  font: 600 1.0625rem var(--font);
+  color: #fff;
+  background: var(--accent);
+  border: 0;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.3s var(--ease), transform 0.3s var(--ease);
+}
+#search-form button[type="submit"] { grid-column: 1 / -1; }
+#search-form button[type="submit"]:hover,
+#fav-form button:hover,
+#alert-form button:hover { background: var(--accent-hover); }
+#search-form button[type="submit"]:active,
+#fav-form button:active,
+#alert-form button:active { transform: scale(0.985); }
+
+/* secondary actions read as quiet links */
+#browse-nearby, #use-location {
+  margin: 18px 24px 0 0;
+  padding: 0;
+  font: 500 1rem var(--font);
+  color: var(--accent);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+#browse-nearby:hover, #use-location:hover { text-decoration: underline; }
+
+#search-status, #alert-status {
+  min-height: 1.5em;
+  margin: 18px 0 4px;
+  font-size: 0.95rem;
+  color: var(--mute);
+}
+
+/* ---------- Your artists + email form ---------- */
+#fav-form, #alert-form { display: flex; flex-wrap: wrap; gap: 12px; }
+#fav-form input, #alert-form input { flex: 1 1 240px; width: auto; }
+
+#fav-chips {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 18px 0 0;
+  padding: 0;
+}
+#fav-chips li {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 6px 6px 16px;
+  font-weight: 500;
+  background: var(--card);
+  border-radius: 980px;
+  box-shadow: var(--shadow);
+}
+#fav-chips button {
+  border: 0;
+  background: none;
+  color: var(--mute);
+  font-size: 1.25rem;
+  line-height: 1;
+  padding: 2px 10px;
+  cursor: pointer;
+}
+#fav-chips button:hover { color: var(--accent); }
+
+/* ---------- Concert cards ---------- */
+#results, #show-list {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+#show-list:empty::before {
+  content: "Add an artist and enter your city to see their shows here.";
+  color: var(--mute);
+}
+
+.show {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-areas:
+    "artist when"
+    "venue  when"
+    "link   when";
+  column-gap: 20px;
+  align-items: start;
+  padding: 22px 26px;
+  background: var(--field);
+  border-radius: 22px;
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+}
+#shows .show { background: var(--card); box-shadow: var(--shadow); }
+
+@media (hover: hover) {
+  .show:hover { transform: translateY(-3px) scale(1.01); }
+}
+
+.show strong {
+  grid-area: artist;
+  font-size: clamp(1.1rem, 2.6vw, 1.4rem);
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+}
+
+.show span {
+  grid-area: venue;
+  margin-top: 4px;
+  font-size: 0.98rem;
+  color: var(--mute);
+}
+
+.show a {
+  grid-area: link;
+  justify-self: start;
+  margin-top: 14px;
+  font-weight: 500;
+  color: var(--accent);
+  text-decoration: none;
+}
+.show a::after {
+  content: "\203A";
+  display: inline-block;
+  margin-left: 6px;
+  transition: transform 0.3s var(--ease);
+}
+.show a:hover { text-decoration: underline; }
+.show a:hover::after { transform: translateX(4px); }
+
+.show time {
+  grid-area: when;
+  align-self: center;
+  padding: 8px 14px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+  border-radius: 980px;
+}
+
+@media (max-width: 560px) {
+  .show {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "when"
+      "artist"
+      "venue"
+      "link";
+    padding: 20px;
+  }
+  .show time { justify-self: start; margin-bottom: 12px; }
+}
+
+/* cards fade up as they scroll into view (where the browser supports it) */
+@supports (animation-timeline: view()) {
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(36px) scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+  .show {
+    animation: reveal linear backwards;
+    animation-timeline: view();
+    animation-range: entry 0% entry 45%;
+  }
+}
+
+/* ---------- Accessibility ---------- */
+a:focus-visible, button:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--accent) 60%, transparent);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

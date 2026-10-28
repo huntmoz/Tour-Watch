@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tour Watch</title>
+  <meta name="description" content="Find concerts near you and get an email when your favorite artists announce shows or tickets go on sale.">
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.26/dist/lenis.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Tour Watch</h1>
+    <button id="enable-notifications" type="button">Turn on notifications</button>
+  </header>
+
+  <main>
+    <section id="search">
+      <h2>Find concerts near you</h2>
+
+      <form id="search-form">
+        <input id="search-input" placeholder="Artist or band (leave blank for everything)">
+        <input id="search-city" placeholder="Your city or US zip (e.g. Pittsburgh)" autocomplete="address-level2">
+        <label class="date-field">From <input id="search-from" type="date"></label>
+        <label class="date-field">To <input id="search-to" type="date"></label>
+        <select id="search-radius" aria-label="Distance">
+          <option value="25">25 miles</option>
+          <option value="50">50 miles</option>
+          <option value="100" selected>100 miles</option>
+          <option value="200">200 miles</option>
+        </select>
+        <select id="search-sort" aria-label="Sort by">
+          <option value="distance">Closest first</option>
+          <option value="date">Soonest first</option>
+          <option value="size">Biggest first</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+
+      <button id="browse-nearby" type="button">Show all concerts near me</button>
+      <button id="use-location" type="button">Use my location instead</button>
+
+      <p id="search-status" role="status"></p>
+      <ul id="results"></ul>
+    </section>
+
+    <section id="shows">
+      <h2>Your artists</h2>
+      <p class="hint">Add up to 10 artists. Their shows near you appear here.</p>
+      <form id="fav-form">
+        <input id="fav-input" placeholder="Add an artist" maxlength="80" required>
+        <button type="submit">Add</button>
+      </form>
+      <ul id="fav-chips"></ul>
+      <ul id="show-list"></ul>
+    </section>
+
+    <section id="alerts">
+      <h2>Get alerts by email</h2>
+      <p class="hint">We’ll email you when your artists announce a show nearby or tickets are about to go on sale. Uses the city and artists above.</p>
+      <form id="alert-form">
+        <input id="alert-email" type="email" placeholder="you@example.com" autocomplete="email" required>
+        <button type="submit">Email me alerts</button>
+      </form>
+      <p id="alert-status" role="status"></p>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/lenis@1.3.26/dist/lenis.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
